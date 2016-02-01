@@ -5,12 +5,12 @@
 # Backup a file/directory by renaming it with the current date and time
 function backup_file {
 	local file=$1
-	local backup=$(date +%Y%m%d%H%M)
+	local file_ext=$(date +%Y%m%d%H%M)
 
 	if [ -e ${file} ]; then
 		if ! [ -h ${file} ]; then
-			echo "Backing up ${file} to: ${file}.${backup}"
-			mv ${file} ${file}.${backup}
+			echo "Backing up ${file} to: ${file}.${file_ext}"
+			mv ${file} ${file}.${file_ext}
 		fi
 	fi
 }
