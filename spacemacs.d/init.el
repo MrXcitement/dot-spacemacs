@@ -23,16 +23,16 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ;; auto-completion
-     ;; better-defaults
+     auto-completion
+     better-defaults
      emacs-lisp
      git
-     ;; markdown
+     markdown
      ;; org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     ;; spell-checking
+     spell-checking
      ;; syntax-checking
      ;; version-control
      )
@@ -244,6 +244,31 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  (setq ispell-program-name "hunspell"
+        ispell-dictionary "en_US")
+  ;; setup darwin (mac os x) environment setup here...
+  (when (eq system-type 'darwin)
+
+    ;; Setup the path.
+    (let ((mypaths '("~/bin"
+                     "/Users/Shared/bin"
+                     "/usr/local/share/python"
+                     "/usr/local/git/bin"
+                     "/usr/local/bin"
+                     "/usr/local/sbin"
+                     "/usr/bin"
+                     "/usr/sbin"
+                     "/bin"
+                     "/sbin")))
+      (setenv "PATH" (mapconcat 'identity mypaths ":"))
+      (setq exec-path mypaths))
+
+    ;; Force the current directory to be the users home dir
+    (setq default-directory "~/")
+
+    ;; Use the provided elisp version of ls
+    (require 'ls-lisp)
+    (setq ls-lisp-use-insert-directory-program nil))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
