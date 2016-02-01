@@ -22,7 +22,7 @@ file="spacemacs.d"
 backup_file "${HOME}/.spacemacs.d"
 
 # Create a symbolic link in the home directory to the spacemacs.d directory
-ln -fsv "${script_path}/spacemacs.d" "${HOME}/.spacemacs.d" 
+ln -fsnv "${script_path}/spacemacs.d" "${HOME}/.spacemacs.d" 
 
 # Backup existing .eamcs file and/or .emacs.d directory
 backup_file "${HOME}/.emacs"
@@ -34,7 +34,7 @@ if ! [ -e "${script_path}/emacs.d" ]; then
 fi
 
 # Create a symolic link in the home directory to the emacs.d directory
-ln -fsv "${script_path}/emacs.d" "${HOME}/.emacs.d" 
+ln -fsnv "${script_path}/emacs.d" "${HOME}/.emacs.d" 
 
 # Spacemacs setup, tell the user where the spacemacs configuration is located.
 echo ""
