@@ -1,0 +1,21 @@
+###
+# Ignore files
+*~
+
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### Windows ###
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+
+###
+# Ignore directories
+/emacs.d/
