@@ -19,17 +19,22 @@ script_path=$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )
 file="spacemacs.d"
 
 # Backup existing spacemacs.d directory
-backup_file "${HOME}/.${file}"
+backup_file "${HOME}/.spacemacs.d"
 
 # Create a symbolic link in the home directory to the spacemacs.d directory
-ln -fsv "${script_path}/${file}" "${HOME}/.${file}"
+ln -fsv "${script_path}/spacemacs.d" "${HOME}/.spacemacs.d" 
 
 # Backup existing .eamcs file and/or .emacs.d directory
 backup_file "${HOME}/.emacs"
 backup_file "${HOME}/.emacs.d"
 
-# Clone the official spacemacs repo into .emacs.d
-git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+# Clone the official spacemacs repo into emacs.d
+if ! [ -e "${script_path}/emacs.d" ]; then
+	git clone https://github.com/syl20bnr/spacemacs ${script_path}/emacs.d
+fi
+
+# Create a symolic link in the home directory to the emacs.d directory
+ln -fsv "${script_path}/emacs.d" "${HOME}/.emacs.d" 
 
 # Spacemacs setup, tell the user where the spacemacs configuration is located.
 echo ""
