@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# install.sh --- Install spacemacs
+
+# Backup a file/directory by renaming it with the current date and time
+function backup_file {
+	local file=$1
+	local backup=$(date +%Y%m%d%H%M)
+
+	if [ -e ${file} ]; then
+		if ! [ -h ${file} ]; then
+			echo "Backing up ${file} to: ${file}.${backup}"
+			mv ${file} ${file}.${backup}
+		fi
+	fi
+}
+
+script_path=$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )
+file="spacemacs.d"
+
+# Backup existing spacemacs.d directory
+backup_file "${HOME}/.${file}"
+
+# Create a symbolic link in the home directory to the spacemacs.d directory
+ln -fsv "${script_path}/${file}" "${HOME}/.${file}"
+
+# Backup existing .eamcs file and/or .emacs.d directory
+backup_file "${HOME}/.emacs"
+backup_file "${HOME}/.emacs.d"
+
+# Clone the official spacemacs repo into .emacs.d
+git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+
+# Spacemacs setup, tell the user where the spacemacs configuration is located.
+echo ""
+echo "Congratulation, Spacemacs is now setup."
+echo "You edit your personal configuration located in the file:"
+echo "${HOME}./.spacemacs.d/init.d"
+echo ""
