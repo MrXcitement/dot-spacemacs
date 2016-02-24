@@ -32,7 +32,8 @@ values."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
-            shell-default-shell 'eshell)
+            shell-default-shell 'eshell
+            eshell-aliases-file "~/.spacemacs.d/eshell/alias")
      spell-checking
      syntax-checking
      ;; version-control
