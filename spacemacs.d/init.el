@@ -252,6 +252,10 @@ layers configuration. You are free to put any user code."
         ispell-dictionary "en_US")
   ;; setup darwin (mac os x) environment setup here...
   (when (eq system-type 'darwin)
+    ;; Use utf-8 for powerline seperator characters
+    ;; this fixes up color issues with the xbm gliphs
+    (setq powerline-default-separator 'utf-8)
+    (spaceline-compile)
 
     ;; Setup the path.
     (let ((mypaths '("~/bin"
