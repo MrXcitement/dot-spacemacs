@@ -28,7 +28,7 @@ values."
      emacs-lisp
      git
      markdown
-     ;; org
+     org
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
@@ -36,7 +36,7 @@ values."
             eshell-aliases-file "~/.spacemacs.d/eshell/alias")
      spell-checking
      syntax-checking
-     ;; version-control
+     version-control
      (csharp :variables omnisharp-server-executable-path "~/bin/OmniSharpServer")
      (vbnet-mode)
      )
