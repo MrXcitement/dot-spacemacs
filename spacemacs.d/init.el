@@ -259,8 +259,6 @@ layers configuration. You are free to put any user code."
     ;; Setup the path.
     (let ((mypaths '("~/bin"
                      "/Users/Shared/bin"
-                     "/usr/local/share/python"
-                     "/usr/local/git/bin"
                      "/usr/local/bin"
                      "/usr/local/sbin"
                      "/usr/bin"
