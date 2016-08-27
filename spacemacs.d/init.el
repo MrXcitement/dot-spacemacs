@@ -38,8 +38,7 @@ values."
      syntax-checking
      version-control
      (csharp :variables omnisharp-server-executable-path "~/bin/OmniSharpServer")
-     (vbnet-mode)
-     )
+     (vbnet-mode))
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
@@ -254,7 +253,7 @@ layers configuration. You are free to put any user code."
   (when (eq system-type 'darwin)
     ;; Use utf-8 for powerline seperator characters
     ;; this fixes up color issues with the xbm gliphs
-    (setq powerline-default-separator 'utf-8)
+    (setq powerline-default-separator nil)
     (spaceline-compile)
 
     ;; Setup the path.
