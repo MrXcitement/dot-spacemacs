@@ -247,11 +247,17 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+
+  ;; set the current theme to use, make sure it is in the list of themes
+  (spacemacs/load-theme 'leuven)
+
+  ;; configure ispell to use the hunspell program for spellchecking
   (setq ispell-program-name "hunspell"
         ispell-dictionary "en_US")
+
   ;; setup darwin (mac os x) environment setup here...
   (when (eq system-type 'darwin)
-    ;; Use utf-8 for powerline seperator characters
+    ;; disable powerline seperator characters
     ;; this fixes up color issues with the xbm gliphs
     (setq powerline-default-separator nil)
     (spaceline-compile)
@@ -271,12 +277,15 @@ layers configuration. You are free to put any user code."
     ;; Hunspell needs this set to work
     (setenv "DICTIONARY" "en_US")
 
-    ;; Force the current directory to be the users home dir
-    (setq default-directory "~/")
-
     ;; Use the provided elisp version of ls
     (require 'ls-lisp)
-    (setq ls-lisp-use-insert-directory-program nil))
+    (setq ls-lisp-use-insert-directory-program nil)
+
+    ;; configure the semi standard <CTRL>-<SUPER>-f key to toggle fullscreen
+    (global-set-key (kbd "<C-s-268632070>") 'spacemacs/toggle-fullscreen-frame)
+
+    ;; Force the current directory to be the users home dir
+    (setq default-directory "~/"))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -286,7 +295,7 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
