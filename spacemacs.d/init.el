@@ -263,18 +263,6 @@ layers configuration. You are free to put any user code."
     (setq powerline-default-separator nil)
     (spaceline-compile)
 
-    ;; Setup the path.
-    (let ((mypaths '("~/bin"
-                     "/Users/Shared/bin"
-                     "/usr/local/bin"
-                     "/usr/local/sbin"
-                     "/usr/bin"
-                     "/usr/sbin"
-                     "/bin"
-                     "/sbin")))
-      (setenv "PATH" (mapconcat 'identity mypaths ":"))
-      (setq exec-path mypaths))
-
     ;; Hunspell needs this set to work
     (setenv "DICTIONARY" "en_US")
 
