@@ -1,6 +1,6 @@
+alias ppath (s-join "\n" (s-split path-separator (getenv "PATH")))
 alias vim find-file $1
 alias diow dired-other-window $1
-alias di dired $1
 alias lla ls -la $*
 alias la ls -a $*
 alias ll ls -l $*
@@ -10,3 +10,4 @@ alias ffof find-file-other-frame $1
 alias ffow find-file-other-window $1
 alias ef ediff-files $*
 alias ms magit-status $1
+alias dir dired $1
