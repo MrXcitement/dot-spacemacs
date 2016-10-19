@@ -280,27 +280,25 @@ layers configuration. You are free to put any user code."
   (when (file-exists-p custom-file)
     (load custom-file))
 
+  ;; disable powerline seperator characters
+  ;; this fixes up color issues with the xbm gliphs
+  (setq powerline-default-separator nil)
+  (spaceline-compile)
+
   ;; configure ispell to use the hunspell program for spellchecking
   (setq ispell-program-name "hunspell"
         ispell-dictionary "en_US")
 
+  ;; Hunspell needs this set to work
+  (setenv "DICTIONARY" "en_US")
+
   ;; setup darwin (mac os x) environment setup here...
   (when (eq system-type 'darwin)
-    ;; disable powerline seperator characters
-    ;; this fixes up color issues with the xbm gliphs
-    (setq powerline-default-separator nil)
-    (spaceline-compile)
-
-    ;; Hunspell needs this set to work
-    (setenv "DICTIONARY" "en_US")
-
     ;; Use the provided elisp version of ls
-    (require 'ls-lisp)
-    (setq ls-lisp-use-insert-directory-program nil)
+    (unless (executable-find "gls")
+      (require 'ls-lisp)
+      (setq ls-lisp-use-insert-directory-program nil
+            dired-listing-switches "-aBhl")))
 
-    ;; configure the semi standard <CTRL>-<SUPER>-f key to toggle fullscreen
-    (global-set-key (kbd "<C-s-268632070>") 'spacemacs/toggle-fullscreen-frame)
-
-    ;; Force the current directory to be the users home dir
-    (setq default-directory "~/"))
-  )
+  ;; Force the current directory to be the users home dir
+  (setq default-directory "~/"))
