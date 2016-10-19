@@ -252,6 +252,11 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
+  ;; write custom settings to the custom.el file
+  (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
+  (when (file-exists-p custom-file)
+    (load custom-file))
+
   ;; configure ispell to use the hunspell program for spellchecking
   (setq ispell-program-name "hunspell"
         ispell-dictionary "en_US")
@@ -277,17 +282,3 @@ layers configuration. You are free to put any user code."
     (setq default-directory "~/"))
   )
 
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-)
