@@ -1,6 +1,7 @@
 ###
 # Ignore files
 *~
+custom.el
 
 ### OSX ###
 .DS_Store
