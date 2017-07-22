@@ -19,4 +19,4 @@ Desktop.ini
 
 ###
 # Ignore directories
-/emacs.d/
+/.emacs.d/

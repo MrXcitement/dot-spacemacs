@@ -15,30 +15,36 @@ function backup_file {
 	fi
 }
 
-script_path=$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )
-file="spacemacs.d"
+# create a symbolic link if one does not allready exist
+function link_file {
+    local src=$1
+    local dst=$2
+
+    if ! [ -h ${dst} ]; then
+        echo "Linking file ${dst}"
+        ln -sv ${src} ${dst}
+    fi
+}
+
+SCRIPT_PATH=$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )
+pushd "$SCRIPT_PATH" > /dev/null
 
 # Backup existing spacemacs.d directory
 backup_file "${HOME}/.spacemacs.d"
 
 # Create a symbolic link in the home directory to the spacemacs.d directory
-ln -fsnv "${script_path}/spacemacs.d" "${HOME}/.spacemacs.d" 
+link_file "${SCRIPT_PATH}/spacemacs.d" "${HOME}/.spacemacs.d" 
 
 # Backup existing .eamcs file and/or .emacs.d directory
 backup_file "${HOME}/.emacs"
 backup_file "${HOME}/.emacs.d"
 
 # Clone the official spacemacs repo into emacs.d
-if ! [ -e "${script_path}/emacs.d" ]; then
-	git clone https://github.com/syl20bnr/spacemacs ${script_path}/emacs.d
+if ! [ -e "${SCRIPT_PATH}/emacs.d" ]; then
+	git clone https://github.com/syl20bnr/spacemacs ${SCRIPT_PATH}/.emacs.d
 fi
 
 # Create a symolic link in the home directory to the emacs.d directory
-ln -fsnv "${script_path}/emacs.d" "${HOME}/.emacs.d" 
+link_file "${SCRIPT_PATH}/emacs.d" "${HOME}/.emacs.d" 
 
-# Spacemacs setup, tell the user where the spacemacs configuration is located.
-echo ""
-echo "Congratulation, Spacemacs is now setup."
-echo "You edit your personal configuration located in the file:"
-echo "${HOME}./.spacemacs.d/init.d"
-echo ""
+popd > /dev/null
