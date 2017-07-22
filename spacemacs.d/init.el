@@ -2,67 +2,6 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-;;; Personal layer lists, default layers and system specific layers
-(defun mrb/my-layers ()
-  (setq
-   mrb--layers
-   '(;; Default layers that get loaded in every instance of spacemacs
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
-     auto-completion
-     better-defaults
-     emacs-lisp
-     git
-     markdown
-     org
-     python
-     (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom
-            shell-default-shell 'eshell
-            eshell-aliases-file "~/.spacemacs.d/eshell/alias")
-     html
-     spell-checking
-     syntax-checking
-     version-control
-     (vbnet-mode))
-   mrb--macos-layers
-   '(;; Apple macOS layers
-     osx
-     (csharp :variables
-             omnisharp-server-executable-path "~/bin/OmniSharpServer")
-     )
-   mrb--windows-layers
-   '(;; MS Windows layers
-     )
-   mrb--linux-layers
-   '(;; GNU Linux layers
-     )
-   )
-  ;; return appended system layers to default layer list
-  (cond ((eq system-type 'windows-nt)
-         (append mrb--layers mrb--windows-layers))
-        ((eq system-type 'darwin)
-         (append mrb--layers mrb--macos-layers))
-        ((eq system-type 'gnu/linux)
-         (append mrb--layers mrb--linux-layers))))
-;; my personal themes
-(defun mrb/my-themes ()
-  '(zenburn
-    spacemacs-dark
-    spacemacs-light
-    solarized-dark
-    solarized-light
-    tango-dark
-    tango
-    tsdh-dark
-    tsdh-light
-    deeper-blue
-    light-blue))
-
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
@@ -90,28 +29,27 @@ values."
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
-   ;; dotspacemacs-configuration-layers 
-   ;; '(
-   ;;   ;; ----------------------------------------------------------------
-   ;;   ;; Example of useful layers you may want to use right away.
-   ;;   ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-   ;;   ;; <M-m f e R> (Emacs style) to install them.
-   ;;   ;; ----------------------------------------------------------------
-   ;;   helm
-   ;;   ;; auto-completion
-   ;;   ;; better-defaults
-   ;;   emacs-lisp
-   ;;   ;; git
-   ;;   ;; markdown
-   ;;   ;; org
-   ;;   ;; (shell :variables
-   ;;   ;;        shell-default-height 30
-   ;;   ;;        shell-default-position 'bottom)
-   ;;   ;; spell-checking
-   ;;   ;; syntax-checking
-   ;;   ;; version-control
-   ;;   )
-   dotspacemacs-configuration-layers (mrb/my-layers)
+   dotspacemacs-configuration-layers
+   '(
+     ;; ----------------------------------------------------------------
+     ;; Example of useful layers you may want to use right away.
+     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
+     ;; <M-m f e R> (Emacs style) to install them.
+     ;; ----------------------------------------------------------------
+     helm
+     ;; auto-completion
+     ;; better-defaults
+     emacs-lisp
+     ;; git
+     ;; markdown
+     ;; org
+     ;; (shell :variables
+     ;;        shell-default-height 30
+     ;;        shell-default-position 'bottom)
+     ;; spell-checking
+     ;; syntax-checking
+     ;; version-control
+     )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
@@ -128,7 +66,10 @@ values."
    ;; `used-but-keep-unused' installs only the used packages but won't uninstall
    ;; them if they become unused. `all' installs *all* packages supported by
    ;; Spacemacs and never uninstall them. (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-only)
+
+  ;; override dotspacemacs layers variables
+  (mrb/user-layers))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -188,15 +129,14 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   ;; dotspacemacs-themes '(spacemacs-dark
-   ;;                       spacemacs-light)
-   dotspacemacs-themes (mrb/my-themes)
+   dotspacemacs-themes '(spacemacs-dark
+                         spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Menlo for Powerline"
-                               :size 13
+   dotspacemacs-default-font '("FuraCode Nerd Font"
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -309,8 +249,18 @@ values."
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
-   ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
-   ;; derivatives. If set to `relative', also turns on relative line numbers.
+   ;; Control line numbers activation.
+   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
+   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; This variable can also be set to a property list for finer control:
+   ;; '(:relative nil
+   ;;   :disabled-for-modes dired-mode
+   ;;                       doc-view-mode
+   ;;                       markdown-mode
+   ;;                       org-mode
+   ;;                       pdf-view-mode
+   ;;                       text-mode
+   ;;   :size-limit-kb 1000)
    ;; (default nil)
    dotspacemacs-line-numbers nil
    ;; Code folding method. Possible values are `evil' and `origami'.
@@ -357,7 +307,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
   (when (file-exists-p custom-file)
     (load custom-file))
-  )
+  ;; override dotspacemacs variables assigned in layer and init functions
+  (setq-default
+   dotspacemacs-themes (mrb/themes)
+   dotspacemacs-line-numbers 'relative
+   )
+  ;; dotspacemacs-configuration-layers (mrb/my-layers)
+  ) ;; end of dotspacemacs/user-init
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -368,8 +324,8 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   ;; disable powerline seperator characters
   ;; this fixes up color issues with the xbm gliphs
-  (setq powerline-default-separator nil)
-  (spaceline-compile)
+  ;; (setq powerline-default-separator nil)
+  ;; (spaceline-compile)
 
   ;; configure spacemacs defualt toogle config
   (spacemacs/toggle-fill-column-indicator)
@@ -389,8 +345,91 @@ you should place your code here."
     (unless (executable-find "gls")
       (require 'ls-lisp)
       (setq ls-lisp-use-insert-directory-program nil
-            dired-listing-switches "-aBhl")))
+            dired-listing-switches "-aBhl"))
+    ;; Fix package update issues re trashing old packages on macOS
+    (if (executable-find "trash")
+        (defun system-move-file-to-trash (file)
+          "Use `trash' to move FILE to the system trash.
+Can be installed with `brew install trash', or `brew install osxutils`''."
+          (call-process (executable-find "trash") nil 0 nil file))
+      ;; regular move to trash directory
+      (setq trash-directory "~/.Trash/emacs"))
+    )
 
   ;; Force the current directory to be the users home dir
   (setq default-directory "~/")
-  )
+  ) ;; end of dotspacemacs/user-config
+
+;;; Override any dotspacemacs variables set in the dotspacemacs/layers
+;;; function. This function is called at the end of dotspacemacs/layers
+;;; function. I would rather centrallize the changes I make so that when
+;;; a new spacemacs initialization file template is downloaded, I can more
+;;; easily diff the changes.
+
+;;; It would be nice if there was a dotspacemacs/user-layers function that
+;;; ran after dotspacemacs/layers but before the layers variables are used.
+(defun mrb/user-layers ()
+  (setq-default dotspacemacs-configuration-layers (mrb/layers)))
+
+;;; Personal layer lists, default layers and system specific layers
+(defun mrb/layers ()
+  (setq
+   mrb-layers
+   '(auto-completion
+     better-defaults
+     emacs-lisp
+     git
+     markdown
+     org
+     python
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom
+            shell-default-shell 'eshell
+            eshell-aliases-file "~/.spacemacs.d/eshell/alias")
+     html
+     javascript
+     rust
+     spell-checking
+     syntax-checking
+     version-control
+     (vbnet-mode)
+     yaml)
+
+   mrb-macos-layers
+   '(;; Apple macOS layers
+     osx
+     (csharp :variables
+             omnisharp-server-executable-path "~/bin/OmniSharpServer")
+     )
+
+   mrb-windows-layers
+   '(;; MS Windows layers
+     )
+
+   mrb-linux-layers
+   '(;; GNU Linux layers
+     )
+   )
+
+  ;; return appended system layers to default layer list
+  (cond ((eq system-type 'windows-nt)
+         (append mrb-layers mrb-windows-layers))
+        ((eq system-type 'darwin)
+         (append mrb-layers mrb-macos-layers))
+        ((eq system-type 'gnu/linux)
+         (append mrb-layers mrb-linux-layers))))
+
+;;; my personal themes
+(defun mrb/themes ()
+  '(zenburn
+    spacemacs-dark
+    spacemacs-light
+    solarized-dark
+    solarized-light
+    tango-dark
+    tango
+    tsdh-dark
+    tsdh-light
+    deeper-blue
+    light-blue))
