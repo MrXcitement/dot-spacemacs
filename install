@@ -20,9 +20,9 @@ function link_file {
     local src=$1
     local dst=$2
 
-    if ! [ -h ${dst} ]; then
+    if ! [ -e ${dst} ]; then
         echo "Linking file ${dst}"
-        ln -sv ${src} ${dst}
+        ln -sfnv ${src} ${dst}
     fi
 }
 
