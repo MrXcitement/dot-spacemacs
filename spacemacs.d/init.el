@@ -36,10 +36,10 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     helm
+     ;; helm
      ;; auto-completion
      ;; better-defaults
-     emacs-lisp
+     ;; emacs-lisp
      ;; git
      ;; markdown
      ;; org
@@ -69,7 +69,7 @@ values."
    dotspacemacs-install-packages 'used-only)
 
   ;; override dotspacemacs layers variables
-  (mrb/user-layers))
+  (mrb/layers))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -135,8 +135,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("FuraCode Nerd Font"
-                               :size 14
+   dotspacemacs-default-font '("Source Code Pro"
+                               :size 13
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -303,16 +303,15 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;; write custom settings to the custom.el file
-  (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
-  (when (file-exists-p custom-file)
-    (load custom-file))
   ;; override dotspacemacs variables assigned in layer and init functions
   (setq-default
-   dotspacemacs-themes (mrb/themes)
-   dotspacemacs-line-numbers 'relative
-   )
-  ;; dotspacemacs-configuration-layers (mrb/my-layers)
+   dotspacemacs-default-font '("FuraCode Nerd Font"
+                               :size 12
+                               :weight normal
+                               :width normal
+                               :powerline-scale 1.1)
+   dotspacemacs-themes mrb-themes
+   dotspacemacs-line-numbers 'relative)
   ) ;; end of dotspacemacs/user-init
 
 (defun dotspacemacs/user-config ()
@@ -322,10 +321,15 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; write custom settings to the custom.el file
+  (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
+  (when (file-exists-p custom-file)
+    (load custom-file))
+
   ;; disable powerline seperator characters
   ;; this fixes up color issues with the xbm gliphs
-  ;; (setq powerline-default-separator nil)
-  ;; (spaceline-compile)
+  (setq powerline-default-separator nil)
+  (spaceline-compile)
 
   ;; configure spacemacs defualt toogle config
   (spacemacs/toggle-fill-column-indicator)
@@ -350,7 +354,7 @@ you should place your code here."
     (if (executable-find "trash")
         (defun system-move-file-to-trash (file)
           "Use `trash' to move FILE to the system trash.
-Can be installed with `brew install trash', or `brew install osxutils`''."
+           Can be installed with `brew install trash', or `brew install osxutils`''."
           (call-process (executable-find "trash") nil 0 nil file))
       ;; regular move to trash directory
       (setq trash-directory "~/.Trash/emacs"))
@@ -360,68 +364,67 @@ Can be installed with `brew install trash', or `brew install osxutils`''."
   (setq default-directory "~/")
   ) ;; end of dotspacemacs/user-config
 
-;;; Override any dotspacemacs variables set in the dotspacemacs/layers
-;;; function. This function is called at the end of dotspacemacs/layers
-;;; function. I would rather centrallize the changes I make so that when
-;;; a new spacemacs initialization file template is downloaded, I can more
-;;; easily diff the changes.
+;;; Override any dotspacemacs variables set in the dotspacemacs/layers function.
+;;; This function is called at the end of dotspacemacs/layers function. I am
+;;; centralizing the changes I make at the end of this file, so that when a new
+;;; spacemacs initialization file template is downloaded, I can more easily diff
+;;; the changes.
 
-;;; It would be nice if there was a dotspacemacs/user-layers function that
-;;; ran after dotspacemacs/layers but before the layers variables are used.
-(defun mrb/user-layers ()
-  (setq-default dotspacemacs-configuration-layers (mrb/layers)))
-
-;;; Personal layer lists, default layers and system specific layers
+;;; Conditionally load layers based on system type
 (defun mrb/layers ()
-  (setq
-   mrb-layers
-   '(auto-completion
-     better-defaults
-     emacs-lisp
-     git
-     markdown
-     org
-     python
-     (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom
-            shell-default-shell 'eshell
-            eshell-aliases-file "~/.spacemacs.d/eshell/alias")
-     html
-     javascript
-     rust
-     spell-checking
-     syntax-checking
-     version-control
-     (vbnet-mode)
-     yaml)
-
-   mrb-macos-layers
-   '(;; Apple macOS layers
-     osx
-     (csharp :variables
-             omnisharp-server-executable-path "~/bin/OmniSharpServer")
-     )
-
-   mrb-windows-layers
-   '(;; MS Windows layers
-     )
-
-   mrb-linux-layers
-   '(;; GNU Linux layers
-     )
-   )
-
-  ;; return appended system layers to default layer list
-  (cond ((eq system-type 'windows-nt)
-         (append mrb-layers mrb-windows-layers))
-        ((eq system-type 'darwin)
+  (setq mrb-layers mrb-default-layers)
+  (cond ((eq system-type 'darwin)
          (append mrb-layers mrb-macos-layers))
         ((eq system-type 'gnu/linux)
-         (append mrb-layers mrb-linux-layers))))
+         (append mrb-layers mrb-linux-layers))
+        ((eq system-type 'windows-nt)
+         (append mrb-layers mrb-windows-layers)))
 
-;;; my personal themes
-(defun mrb/themes ()
+  (setq-default dotspacemacs-configuration-layers mrb-layers))
+
+;;; default layers used on all systems
+(defvar mrb-default-layers
+  '(auto-completion
+    better-defaults
+    emacs-lisp
+    git
+    markdown
+    org
+    python
+    (shell :variables
+           shell-default-height 30
+           shell-default-position 'bottom
+           shell-default-shell 'eshell
+           eshell-aliases-file "~/.spacemacs.d/eshell/alias")
+    html
+    javascript
+    rust
+    spell-checking
+    syntax-checking
+    version-control
+    vbnet-mode
+    yaml)
+  "Default layers to load regardless of system")
+
+;;; personal list of macos layers
+(defvar mrb-macos-layers
+   '(osx
+     (csharp :variables
+             omnisharp-server-executable-path "~/bin/OmniSharpServer"))
+  "macOS layers to be loaded on macOS system")
+
+;;; personal list of ms windows layers
+(defvar mrb-windows-layers
+   '()
+  "layers to be loaded when on MS Windows system")
+
+;;; personal list of linux layers
+(defvar mrb-linux-layers
+   '()
+  "Layers to be loaded when on a linux system")
+
+;;; personal themes
+(defvar mrb-themes
   '(zenburn
     spacemacs-dark
     spacemacs-light
@@ -432,4 +435,36 @@ Can be installed with `brew install trash', or `brew install osxutils`''."
     tsdh-dark
     tsdh-light
     deeper-blue
-    light-blue))
+    light-blue)
+  "Personal list of themes")
+
+(defun add-fira-code-symbol-keywords ()
+  (let ((alist '((33 . ".\\(?:\\(?:==\\|!!\\)\\|[!=]\\)")
+               (35 . ".\\(?:###\\|##\\|_(\\|[#(?[_{]\\)")
+               (36 . ".\\(?:>\\)")
+               (37 . ".\\(?:\\(?:%%\\)\\|%\\)")
+               (38 . ".\\(?:\\(?:&&\\)\\|&\\)")
+               (42 . ".\\(?:\\(?:\\*\\*/\\)\\|\\(?:\\*[*/]\\)\\|[*/>]\\)")
+               (43 . ".\\(?:\\(?:\\+\\+\\)\\|[+>]\\)")
+               (45 . ".\\(?:\\(?:-[>-]\\|<<\\|>>\\)\\|[<>}~-]\\)")
+               (46 . ".\\(?:\\(?:\\.[.<]\\)\\|[.=-]\\)")
+               (47 . ".\\(?:\\(?:\\*\\*\\|//\\|==\\)\\|[*/=>]\\)")
+               (48 . ".\\(?:x[a-zA-Z]\\)")
+               (58 . ".\\(?:::\\|[:=]\\)")
+               (59 . ".\\(?:;;\\|;\\)")
+               (60 . ".\\(?:\\(?:!--\\)\\|\\(?:~~\\|->\\|\\$>\\|\\*>\\|\\+>\\|--\\|<[<=-]\\|=[<=>]\\||>\\)\\|[*$+~/<=>|-]\\)")
+               (61 . ".\\(?:\\(?:/=\\|:=\\|<<\\|=[=>]\\|>>\\)\\|[<=>~]\\)")
+               (62 . ".\\(?:\\(?:=>\\|>[=>-]\\)\\|[=>-]\\)")
+               (63 . ".\\(?:\\(\\?\\?\\)\\|[:=?]\\)")
+               (91 . ".\\(?:]\\)")
+               (92 . ".\\(?:\\(?:\\\\\\\\\\)\\|\\\\\\)")
+               (94 . ".\\(?:=\\)")
+               (119 . ".\\(?:ww\\)")
+               (123 . ".\\(?:-\\)")
+               (124 . ".\\(?:\\(?:|[=|]\\)\\|[=>|]\\)")
+               (126 . ".\\(?:~>\\|~~\\|[>=@~-]\\)")
+               )
+             ))
+  (dolist (char-regexp alist)
+    (set-char-table-range composition-function-table (car char-regexp)
+                          `([,(cdr char-regexp) 0 font-shape-gstring])))))
