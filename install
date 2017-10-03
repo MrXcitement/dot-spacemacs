@@ -40,11 +40,11 @@ backup_file "${HOME}/.emacs"
 backup_file "${HOME}/.emacs.d"
 
 # Clone the official spacemacs repo into emacs.d
-if ! [ -e "${SCRIPT_PATH}/emacs.d" ]; then
+if ! [ -e "${SCRIPT_PATH}/.emacs.d" ]; then
 	git clone https://github.com/syl20bnr/spacemacs ${SCRIPT_PATH}/.emacs.d
 fi
 
 # Create a symolic link in the home directory to the emacs.d directory
-link_file "${SCRIPT_PATH}/emacs.d" "${HOME}/.emacs.d" 
+link_file "${SCRIPT_PATH}/.emacs.d" "${HOME}/.emacs.d" 
 
 popd > /dev/null
